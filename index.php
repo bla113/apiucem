@@ -51,8 +51,8 @@ function validaToken()
 Flight::route('/', function () {
 
     try {
-       
-    validaToken();
+
+        validaToken();
     } catch (\Throwable $th) {
         $messaje = [
             'error' => $th->getMessage(),
@@ -60,7 +60,6 @@ Flight::route('/', function () {
         ];
         Flight::halt(403, json_encode($messaje));
     }
-
 });
 
 
@@ -107,8 +106,12 @@ Flight::route('POST /auth', function () {
             $eliminaToken = ControladorUsuarios::eliminarTokenUsuario($usuarios['id']);
 
             $guardaToken = ControladorUsuarios::ctrCrearToken($usuarios['id'], $jwt);
+            $messaje = [
+                'token' => json_encode($jwt),
+                'user_id' => '1'
+            ];
+            Flight::json($messaje);
 
-            json_encode($jwt);
         } else {
 
             Flight::halt(403, 'incorrect credentials');
@@ -196,14 +199,9 @@ Flight::route('/materia/@IDMATERIA', function ($IDMATERIA) {
         if ($materia) {
 
             Flight::json($materia);
-
         } else {
             Flight::json(array('MESSAGE' => 'MATERIA NO ENCONTRADA'));
         }
-
-     
-
-
     } else {
         $message = [
             'error' => 'Not found',
@@ -233,14 +231,9 @@ Flight::route('/materias', function () {
         if ($materia) {
 
             Flight::json($materia);
-
         } else {
             Flight::json(array('MESSAGE' => 'MATERIA NO ENCONTRADA'));
         }
-
-     
-
-
     } else {
         $message = [
             'error' => 'Not found',
