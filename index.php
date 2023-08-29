@@ -108,7 +108,7 @@ Flight::route('POST /auth', function () {
 
             $guardaToken = ControladorUsuarios::ctrCrearToken($usuarios['id'], $jwt);
 
-            print_r($jwt);
+            json_encode($jwt);
         } else {
 
             Flight::halt(403, 'incorrect credentials');
