@@ -106,13 +106,20 @@ Flight::route('POST /auth', function () {
             $eliminaToken = ControladorUsuarios::eliminarTokenUsuario($usuarios['id']);
 
             $guardaToken = ControladorUsuarios::ctrCrearToken($usuarios['id'], $jwt);
+
             $messaje = [
-                'token' => json_encode($jwt),
-                'user_id' => '1'
+                'token' => $jwt,
+                'user_id' => $usuarios['id']
             ];
             Flight::json($messaje);
 
         } else {
+
+            //  $messaje = [
+            //     'token' => json_encode($jwt),
+            //     'user_id' => '1'
+            // ];
+            // Flight::json($messaje);
 
             Flight::halt(403, 'incorrect credentials');
         }
