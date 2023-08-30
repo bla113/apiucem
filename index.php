@@ -101,7 +101,7 @@ Flight::route('POST /auth', function () {
 
             $payload = [
                 'exp' => $now + 900, //15 minutos 
-                'aud' =>  $usuarios['id'],
+                'user_id' =>  $usuarios['id'],
 
             ];
 
@@ -146,8 +146,10 @@ Flight::route('GET /usuario', function () {
     if (validaToken()) {
 
         $token = validaToken();
+        
 
-        $id = '1';
+
+        
 
         $item = 'id';
 
@@ -158,7 +160,7 @@ Flight::route('GET /usuario', function () {
 
         $user = json_encode($usuarios);
 
-        Flight::json($token);
+        Flight::json( $user);
     } else {
 
 
