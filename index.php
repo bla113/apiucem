@@ -147,7 +147,7 @@ Flight::route('GET /usuario', function () {
 
         $token = validaToken();
 
-        $id = $token->data->aud;
+        $id = '1';
 
         $item = 'id';
 
