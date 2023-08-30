@@ -146,7 +146,7 @@ Flight::route('GET /usuario', function () {
         $token = validaToken();
         
 
-
+        $ID= $token['user_id'];
 
         $item = 'id';
 
@@ -157,7 +157,7 @@ Flight::route('GET /usuario', function () {
 
         $user = json_encode($usuarios);
 
-        Flight::json($user);
+        Flight::json($ID);
     } else {
 
 
