@@ -147,10 +147,12 @@ Flight::route('GET /usuario', function () {
 
         $token = validaToken();
 
+        $id = $token->data->aud;
+
         $item = 'id';
 
 
-        $valor = $token['aud'];
+        $valor = $id;
 
         $usuarios = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
 
