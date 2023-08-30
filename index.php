@@ -23,7 +23,7 @@ use Firebase\JWT\Key;
 	=============================================*/
 
 function validaToken()
-{
+{    try {
     $headers = apache_request_headers();
 
     $authorization = $headers['Authorization'];
@@ -32,9 +32,13 @@ function validaToken()
 
     $token =  $authorizationarray[1]; //posicion donde esta el token
 
-    try {
 
-        print_r(JWT::decode($token, new Key('JBRSOLUCIONES', 'HS256')));
+
+        $token =  JWT::decode($token, new Key('JBRSOLUCIONES', 'HS256'));
+
+        return $token;
+
+
     } catch (\Throwable $th) {
 
         $messaje = [
@@ -137,19 +141,21 @@ Flight::route('POST /auth', function () {
 
 
 
-Flight::route('GET /usuario/@id/', function ($id) {
+Flight::route('GET /usuario', function () {
 
     if (!validaToken()) {
-        $item = 'id';
+
+        $token = validaToken();
+        /*$item = 'id';
 
 
         $valor = $id;
 
         $usuarios = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
 
-        $user = json_encode($usuarios);
+        $user = json_encode($usuarios);*/
 
-        Flight::json($usuarios);
+        Flight::json($token);
     } else {
 
 
@@ -220,7 +226,9 @@ Flight::route('/materia/@IDMATERIA', function ($IDMATERIA) {
 });
 
 
-
+/*=============================================
+	ENVIAR PEFIL DEL USUARIO
+	=============================================*/
 
 
 
