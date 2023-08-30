@@ -156,9 +156,9 @@ Flight::route('GET /usuario', function () {
 
         $usuarios = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
 
-        $user = $usuarios;
+        $user = json_encode($usuarios) ;
 
-        Flight::jsonp($user);
+        Flight::json($user);
     } else {
 
 
