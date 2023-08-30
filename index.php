@@ -145,8 +145,11 @@ Flight::route('GET /usuario', function () {
 
         $token = validaToken();
         
+        foreach ($token as $key => $value) {
+            $ID= $value['user_id'];
+        }
 
-        $ID= $token['user_id'];
+       
 
         $item = 'id';
 
