@@ -144,24 +144,20 @@ Flight::route('GET /usuario', function () {
     if (validaToken()) {
 
         $token = validaToken();
-        foreach ($token as $index => $objeto) {
-           $id= $objeto['aud'];
-
-        }
-
+        
 
 
 
         $item = 'id';
 
 
-        $valor = $id;
+        $valor = 1;
 
         $usuarios = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
 
         $user = json_encode($usuarios);
 
-        Flight::json( $id);
+        Flight::json($user);
     } else {
 
 
