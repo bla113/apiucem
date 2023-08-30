@@ -143,7 +143,7 @@ Flight::route('POST /auth', function () {
 
 Flight::route('GET /usuario', function () {
 
-    if (!validaToken()) {
+    if (validaToken()) {
 
         $token = validaToken();
         /*$item = 'id';
