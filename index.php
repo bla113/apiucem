@@ -48,18 +48,20 @@ function validaToken()
     }
 }
 
-
+/*=============================================
+	FIN FUNCION CREAR  TOKEN
+	=============================================*/
 
 
 Flight::route('/', function () {
 
     try {
 
-        validaToken();
+        validaToken(); // MANDAMOS A LLAMAR LA FUNCIO DE CREAR EL TOKEN
     } catch (\Throwable $th) {
         $messaje = [
             'error' => $th->getMessage(),
-            'status' => 'Error'
+            'status' => 'Necesita credenciales validas para ingresar'
         ];
         Flight::halt(403, json_encode($messaje));
     }
@@ -69,7 +71,7 @@ Flight::route('/', function () {
 
 
 
-Flight::route('POST /auth', function () {
+Flight::route('POST /auth', function () {//ESTA URL CREA UNA SESION CON NUEVO TOKEN  paramatros( ususario y password)
 
 
     try {
@@ -129,7 +131,7 @@ Flight::route('POST /auth', function () {
 
         $messaje = [
             'error' => 'Unauthorized',
-            'status' => 'User not found'
+            'status' => 'Usuario no encontrado'
         ];
         Flight::halt(403, json_encode($messaje));
     }
@@ -139,7 +141,7 @@ Flight::route('POST /auth', function () {
 
 
 
-Flight::route('GET /usuario', function () {
+Flight::route('GET /usuario', function () {// Obtiene la infirmacion del usuario
 
     if (validaToken()) {
 
@@ -170,97 +172,330 @@ Flight::route('GET /usuario', function () {
     }
 });
 
+/*=============================================
+	INICIO FUNCION MOSTRAR MATERIAS ESTUDIANTE
+	=============================================*/
+
+Flight::route('GET /materias', function () {// Obtiene la infirmacion del usuario
+
+    if (validaToken()) {
+
+        $token = validaToken();
+        
+       
+
+        $identificacion= $token->user_id;
+
+        $item = 'id';
 
 
-Flight::route('/estudiante/@identificacion', function ($identificacion) {
-    if (!validaToken()) {
+        $id= $token->user_id;
+
+        $item = 'id';
 
 
-        $item = 'IDENTIFICACION_ESTUDIANTE';
-        $valor = $identificacion;
+        $valor = $id;
 
-        $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+        $usuarios = ControladorUsuarios::ctrUsuarioParaMateria($item, $valor);
+        foreach ($usuarios as $key => $usuarioM) {
 
-        if ($estudiante) {
-
-            Flight::json($estudiante);
-        } else {
-            $message = [
-                'error' => 'Not found',
-                'status' => 'Error'
-            ];
-            Flight::halt(403, json_encode($message));
+           
         }
-    } else {
-        $message = [
-            'error' => 'Not found',
-            'status' => 'Error'
-        ];
 
+        $valor = $usuarioM['usuario'];
+
+         $item = 'IDENTIFICACION_ESTUDIANTE';
+        
+         $itemU='usuario';
+
+         $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+
+         //$usuarios = ControladorUsuarios::ctrUsuarioParaMateria($itemU, $valor);
+      
+
+         $MateriasEstudiante = ControladorMaterias::ctrMostrarToadasMateriasEstudiante($estudiante[0][0]);
+         
+       
+
+        Flight::json( $MateriasEstudiante );
+    } else {
+
+
+        $message = [
+            'error' => 'Unauthorized',
+            'status' => 'nauthorize fail'
+        ];
         Flight::halt(403, json_encode($message));
     }
 });
 
-Flight::route('/materia/@IDMATERIA', function ($IDMATERIA) {
-
-    if (!validaToken()) {
-
-
-
-        $item = 'ID_MATERIA';
-        $valor = $IDMATERIA;
-
-        $materia = ControladorMaterias::ctrMostrarMateria($item, $valor);
-
-        if ($materia) {
-
-            Flight::json($materia);
-        } else {
-            Flight::json(array('MESSAGE' => 'MATERIA NO ENCONTRADA'));
-        }
-    } else {
-        $message = [
-            'error' => 'Not found',
-            'status' => 'Error'
-        ];
-
-        Flight::halt(403, json_encode($message));
-    }
-});
 
 
 /*=============================================
-	ENVIAR PEFIL DEL USUARIO
+	FIN FUNCION MOSTRAR MATERIAS ESTUDIANTE
 	=============================================*/
 
 
 
-Flight::route('/materias', function () {
+    
+/*=============================================
+	INICIO FUNCION MOSTRAR MATERIAS A´PROBADAS ESTUDIANTE
+	=============================================*/
 
-    if (!validaToken()) {
+Flight::route('GET /materias/aprobadas', function () {// Obtiene la infirmacion del usuario
+
+    if (validaToken()) {
+
+        $token = validaToken();
+        
+       
+
+        $identificacion= $token->user_id;
+
+        $item = 'id';
 
 
+        $id= $token->user_id;
 
-        $item = NULL;
-        $valor = null;
+        $item = 'id';
 
-        $materia = ControladorMaterias::ctrMostrarMateria($item, $valor);
 
-        if ($materia) {
+        $valor = $id;
 
-            Flight::json($materia);
-        } else {
-            Flight::json(array('MESSAGE' => 'MATERIA NO ENCONTRADA'));
+        $usuarios = ControladorUsuarios::ctrUsuarioParaMateria($item, $valor);
+        foreach ($usuarios as $key => $usuarioM) {
+
+           
         }
-    } else {
-        $message = [
-            'error' => 'Not found',
-            'status' => 'Error'
-        ];
 
+        $valor = $usuarioM['usuario'];
+
+         $item = 'IDENTIFICACION_ESTUDIANTE';
+        
+         $itemU='usuario';
+
+         $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+
+         //$usuarios = ControladorUsuarios::ctrUsuarioParaMateria($itemU, $valor);
+      
+
+         $MateriasAprobadas = ControladorMaterias::ctrMostrarMateriasAprobadasEstudiante($estudiante[0][0]);
+         
+       
+
+        Flight::json( $MateriasAprobadas );
+    } else {
+
+
+        $message = [
+            'error' => 'Unauthorized',
+            'status' => 'nauthorize fail'
+        ];
         Flight::halt(403, json_encode($message));
     }
 });
+
+
+
+/*=============================================
+	FIN FUNCION MOSTRAR MATERIAS ESTUDIANTE
+	=============================================*/
+
+
+
+        
+/*=============================================
+	INICIO FUNCION MOSTRAR MATERIAS MATRICULADAS ESTUDIANTE
+	=============================================*/
+
+Flight::route('GET /materias/matriculadas', function () {// Obtiene la infirmacion del usuario
+
+    if (validaToken()) {
+
+        $token = validaToken();
+        
+       
+
+        $identificacion= $token->user_id;
+
+        $item = 'id';
+
+
+        $id= $token->user_id;
+
+        $item = 'id';
+
+
+        $valor = $id;
+
+        $usuarios = ControladorUsuarios::ctrUsuarioParaMateria($item, $valor);
+        foreach ($usuarios as $key => $usuarioM) {
+
+           
+        }
+
+        $valor = $usuarioM['usuario'];
+
+         $item = 'IDENTIFICACION_ESTUDIANTE';
+        
+         $itemU='usuario';
+
+         $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+
+         //$usuarios = ControladorUsuarios::ctrUsuarioParaMateria($itemU, $valor);
+      
+
+         $MateriasMatriculadas = ControladorMaterias::ctrMostrarMateriasMatriculadasEstudiante($estudiante[0][0]);
+         
+       
+
+        Flight::json( $MateriasMatriculadas );
+    } else {
+
+
+        $message = [
+            'error' => 'Unauthorized',
+            'status' => 'nauthorize fail'
+        ];
+        Flight::halt(403, json_encode($message));
+    }
+});
+
+
+
+/*=============================================
+	FIN FUNCION MOSTRAR MATRICULADAS ESTUDIANTE
+	=============================================*/
+
+
+
+
+    /*=============================================
+	INICIO FUNCION MOSTRAR MATERIAS MATRICULADAS ESTUDIANTE
+	=============================================*/
+
+Flight::route('GET /materias/pendientes', function () {// Obtiene la infirmacion del usuario
+
+    if (validaToken()) {
+
+        $token = validaToken();
+        
+       
+
+        $identificacion= $token->user_id;
+
+        $item = 'id';
+
+
+        $id= $token->user_id;
+
+        $item = 'id';
+
+
+        $valor = $id;
+
+        $usuarios = ControladorUsuarios::ctrUsuarioParaMateria($item, $valor);
+        foreach ($usuarios as $key => $usuarioM) {
+
+           
+        }
+
+        $valor = $usuarioM['usuario'];
+
+         $item = 'IDENTIFICACION_ESTUDIANTE';
+        
+         $itemU='usuario';
+
+         $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+
+         //$usuarios = ControladorUsuarios::ctrUsuarioParaMateria($itemU, $valor);
+      
+
+         
+         $MateriasPendiantes = ControladorMaterias::ctrMostrarMateriasEstudiante($estudiante[0][0]);
+       
+
+        Flight::json( $MateriasPendiantes );
+    } else {
+
+
+        $message = [
+            'error' => 'Unauthorized',
+            'status' => 'nauthorize fail'
+        ];
+        Flight::halt(403, json_encode($message));
+    }
+});
+
+
+
+/*=============================================
+	FIN FUNCION MOSTRAR MATRICULADAS ESTUDIANTE
+	=============================================*/
+
+
+
+    /*=============================================
+	INICIO FUNCION MOSTRAR  ESTUDIANTE
+	=============================================*/
+
+
+   
+
+    Flight::route('GET /estudiante', function () {// Obtiene la infirmacion del usuario
+
+        if (validaToken()) {
+    
+            $token = validaToken();
+            
+           
+    
+            $identificacion= $token->user_id;
+    
+            $item = 'id';
+    
+    
+            $id= $token->user_id;
+    
+            $item = 'id';
+    
+    
+            $valor = $id;
+    
+            $usuarios = ControladorUsuarios::ctrUsuarioParaMateria($item, $valor);
+            foreach ($usuarios as $key => $usuarioM) {
+    
+               
+            }
+    
+            $valor = $usuarioM['usuario'];
+    
+             $item = 'IDENTIFICACION_ESTUDIANTE';
+            
+             $itemU='usuario';
+    
+             $estudiante = ControladorEstudiante::ctrMostrarEstudiante($item, $valor);
+    
+            Flight::json( $estudiante );
+        } else {
+    
+    
+            $message = [
+                'error' => 'Unauthorized',
+                'status' => 'nauthorize fail'
+            ];
+            Flight::halt(403, json_encode($message));
+        }
+    });
+    
+
+
+
+ /*=============================================
+	FIN FUNCION MOSTRAR  ESTUDIANTE
+	=============================================*/
+
+
 
 
 

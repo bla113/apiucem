@@ -12,6 +12,16 @@ class ControladorUsuarios
         return $respuesta;
     }
 
+    static public function ctrUsuarioParaMateria($item, $valor)
+    {
+
+        $tabla = "usuarios";
+
+        $respuesta = ModeloUsuarios::mdlMostrarUsuarioParaMaterias($tabla, $item, $valor);
+
+        return $respuesta;
+    }
+
     static function ctrCrearToken($usuario, $token)
     {
 

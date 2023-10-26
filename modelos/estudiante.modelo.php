@@ -17,7 +17,7 @@ class ModeloEstudiante{
 
 			$stmt -> execute();
 
-			return $stmt -> fetch();
+			return $stmt -> fetchAll();
 
 		}else{
 
